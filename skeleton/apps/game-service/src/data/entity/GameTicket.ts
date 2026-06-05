@@ -1,6 +1,7 @@
 import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Game} from "./Game";
 import {StadiumSeat} from "./StadiumSeat";
+import {TicketStatus} from "../enums/TicketStatus";
 
 @Entity()
 export class GameTicket {
@@ -16,8 +17,8 @@ export class GameTicket {
     @Column({type: 'int'})
     price!: number;
 
-    @Column({type: 'boolean'})
-    is_sold!: boolean;
+    @Column({type: 'int'})
+    status!: TicketStatus;
 
     @ManyToOne(() => Game)
     @JoinColumn({name: 'game_id'})

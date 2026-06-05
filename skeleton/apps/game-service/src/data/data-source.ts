@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
     port: 5433,
     username: "steva",
     password: "stepadoo",
-    database: "gamee",
+    database: "game",
     synchronize: false,
     logging: true,
     entities: [Game, GameTicket, Team, Stadium, StadiumSeat],
