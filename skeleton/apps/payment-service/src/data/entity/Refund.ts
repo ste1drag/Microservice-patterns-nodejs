@@ -11,13 +11,13 @@ export class Refund {
     @PrimaryGeneratedColumn()
     id!: string;
 
-    @Column({type:"number"})
+    @Column({type:"int"})
     transaction_id!: number;
 
     @Column({type:"decimal"})
     amount!: number;
 
-    @CreateDateColumn({ type: "datetime" })
+    @CreateDateColumn({ type: "timestamp" })
     createdAt!: Date;
 
     @Column({ type: 'int' })

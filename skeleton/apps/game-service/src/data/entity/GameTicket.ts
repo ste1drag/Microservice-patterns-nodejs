@@ -8,6 +8,9 @@ export class GameTicket {
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @Column({type: 'bigint', nullable:true})
+    reservation_id!: number | null;
+
     @Column({type: 'int'})
     game_id!: number;
 
@@ -16,6 +19,9 @@ export class GameTicket {
 
     @Column({type: 'int'})
     price!: number;
+
+    @Column({type: 'timestamp', nullable: true})
+    reserved_at!: Date | null;
 
     @Column({type: 'int'})
     status!: TicketStatus;

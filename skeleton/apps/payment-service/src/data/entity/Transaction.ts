@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export enum PaymentStatus {
         Pending = 1,
@@ -27,16 +27,16 @@ export class Transaction {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @PrimaryColumn({type:"varchar"})
+    @Column({type:"varchar"})
     user_id!: string;
 
     @Column({type:"decimal"})
     amount!: number;
 
-    @Column({type:"datetime"})
+    @CreateDateColumn({type:"timestamp"})
     created_at!: Date;
 
-    @Column({type:"datetime"})
+    @UpdateDateColumn({type:"timestamp"})
     updated_at!: Date;
 
     @Column({type: "int"})
@@ -45,6 +45,6 @@ export class Transaction {
     @Column({type: "int"})
     currency!: PaymentCurrency;
 
-    @PrimaryColumn({type:"varchar"})
+    @Column({type:"varchar"})
     game_ticket_id!: string;
 }

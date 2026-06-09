@@ -8,13 +8,13 @@ import {StadiumSeat} from "./entity/StadiumSeat";
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
-    port: 5433,
+    port: 5432,
     username: "steva",
     password: "stepadoo",
-    database: "game",
+    database: "gamenode",
     synchronize: false,
     logging: true,
     entities: [Game, GameTicket, Team, Stadium, StadiumSeat],
     subscribers: [],
-    migrations: ["./migrations/**/*.ts"]
+    migrations: ["./src/data/migration/**/*.ts"]
 })

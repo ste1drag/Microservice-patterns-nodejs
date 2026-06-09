@@ -6,8 +6,8 @@ export class Team {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({type:'int'})
-    stadium_id!: number;
+    @Column({type:'int', nullable: true})
+    stadium_id!: number | null;
 
     @Column({type:'varchar', length: 255})
     name!: string;
@@ -15,7 +15,7 @@ export class Team {
     @Column({type:'varchar', length: 255})
     city!: string;
 
-    @OneToOne(() => Stadium)
+    @OneToOne(() => Stadium, { nullable: true })
     @JoinColumn({name: 'stadium_id'})
-    stadium!: Stadium;
+    stadium!: Stadium | null;
 }

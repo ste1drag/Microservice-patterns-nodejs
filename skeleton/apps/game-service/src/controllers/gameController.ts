@@ -7,67 +7,90 @@ const getAllGames = async (req: Request, res: Response, next: NextFunction) => {
     const games: GameInfo[] | null = await gameService.getAllGames();
 
     if (!games || !games.length) {
-        res.status(404).send("Nema trenutno nijedna igra");
+        return res.status(404).send("Nema trenutno nijedna igra");
     }
 
-    res.status(200).send(games);
+    return res.status(200).send(games);
 }
 
 const getGame = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.query.id;
+    const id = req.params.id;
 
     if (!id)
-        return res.status(404).send("Nema id");
+        return res.status(400).send("Nema id");
 
-    const game: GameInfo | null = await gameService.getGameById(parseInt(id as string));
+    const parsedId = Number(id);
+
+    if (Number.isNaN(parsedId)) {
+        return res.status(400).send("Id nije u dobrom formatu");
+    }
+
+    const game: GameInfo | null = await gameService.getGameById(parsedId);
 
     if (!game)
-        res.status(404).send("Utakmica nije pronadjena");
+        return res.status(404).send("Utakmica nije pronadjena");
 
-    res.status(200).send(game);
+    return res.status(200).send(game);
 }
 
 const getSeatInfo = async (req: Request, res: Response, next: NextFunction) => {
-    const gameId = req.query.gameId as string;
-    const seatId = req.query.seatId as string;
+    const gameId = req.params.gameId as string;
+    const seatId = req.params.seatId as string;
 
     if (!gameId || !seatId) {
-        res.status(404).send("Nisu svi podaci poslati");
+        return res.status(400).send("Nisu svi podaci poslati");
     }
 
     const gameSeat: GameSeat | null = await gameService.getSeatInfo(parseInt(gameId), parseInt(seatId));
 
     if (!gameSeat)
-        res.status(404).send("Nije pronadjeno sediste");
+        return res.status(404).send("Nije pronadjeno sediste");
 
-    res.status(200).send(gameSeat);
+    return res.status(200).send(gameSeat);
+}
+
+const getGameTickets = async (req: Request, res: Response, next: NextFunction) => {
+    const gameId = req.params.gameId as string;
+
+    if(!gameId)
+        return res.status(404).send("Nije pronadjena utakmica");
+
+    const gameTickets = await gameService.getGameTickets(parseInt(gameId));
+
+    return res.status(200).json(gameTickets);
 }
 
 const postTicketPay = async (req: Request, res: Response, next: NextFunction) => {
-    const gameId = req.query.gameId as string;
-    const seatId = req.query.seatId as string;
-    const priceStr = req.query.price as string;
+    try {
+        const {ticketId, userId, amount, currency, reservationId} = req.body ?? {};
 
-    const price = parseInt(price);
+        if (!ticketId || !userId || !amount || currency === undefined) {
+            return res.status(400).send("Nisu svi podaci poslati");
+        }
 
-    if (!gameId || !seatId) {
-        res.status(404).send("Nisu svi podaci poslati");
+
+        const result = await gameService.postTicketPayment({
+            ticketId: parseInt(ticketId),
+            userId,
+            amount: parseInt(amount),
+            currency: parseInt(currency),
+            reservationId: reservationId ? parseInt(reservationId) : null
+        });
+
+        if (!result) {
+            return res.status(404).send("Karta nije pronadjena");
+        }
+
+        return res.status(200).send(result);
+    } catch (err) {
+        return next(err);
     }
-
-    const result = await gameService.postTicketPayment({gameId: parseInt(gameId), seatId: parseInt(seatId), price});
-
-    if (!result){
-        res.status(404).send("Nisu svi podaci poslati");
-    }
-
-    res.status(200).send(result);
 }
-
-
 
 export const gameController = {
     getAllGames,
     getGame,
     getSeatInfo,
     postTicketPay,
+    getGameTickets
 }
