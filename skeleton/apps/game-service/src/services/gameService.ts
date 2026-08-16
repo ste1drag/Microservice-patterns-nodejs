@@ -6,6 +6,7 @@ import {Game} from "../data/entity/Game";
 import {GameTicket} from "../data/entity/GameTicket";
 import {TicketStatus} from "../data/enums/TicketStatus";
 import axios from "axios";
+import { UpdateResult } from "typeorm";
 
 const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL ?? "http://localhost:3001";
 
@@ -99,7 +100,7 @@ const getSeatInfo = async (gameId: number, seatId: number): Promise<GameSeat | n
 const tryReserveTicket = async (ticketId: number, reservationId: number): Promise<boolean> => {
     const gameTicketRepository = AppDataSource.getRepository(GameTicket);
 
-    const result = await gameTicketRepository.update(
+    const result: UpdateResult = await gameTicketRepository.update(
         {id: ticketId, status: TicketStatus.AVAILABLE},
         {
             status: TicketStatus.PENDING,
@@ -142,10 +143,10 @@ const releaseReservedTicket = async (ticketId: number): Promise<void> => {
         const released = await releaseTicket(ticketId);
 
         if (!released) {
-            console.warn(`Reserved ticket ${ticketId} was not released because it is no longer pending`);
+            console.warn(`Rezervisana karta ${ticketId} nije u cekanju`);
         }
     } catch (releaseError) {
-        console.error(`Failed to release reserved ticket ${ticketId}:`, releaseError);
+        console.error(`Neuspesno otkazivanje rezervisane karte ${ticketId}:`, releaseError);
     }
 }
 
