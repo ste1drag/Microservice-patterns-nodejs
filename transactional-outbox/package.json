@@ -1,0 +1,15 @@
+{
+  "name": "transactional-outbox",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Transactional outbox pattern demo (game-service + payment-service + gateway)",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:game": "npm run dev --workspace game-service",
+    "dev:payment": "npm run dev --workspace payment-service",
+    "dev:gateway": "npm run dev --workspace game-payment-gateway",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
